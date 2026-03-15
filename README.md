@@ -12,10 +12,11 @@ Built with vanilla HTML, CSS, and JavaScript — no frameworks, no dependencies,
 - 💱 Live exchange rates powered by [Open Exchange Rates](https://open.er-api.com)
 - ⭐ Star up to 8 currencies to pin them to your list
 - ✏️ Tap any conversion amount to edit it inline — all other currencies update instantly
-- 🏠 Long-press any currency card to set it as your base currency
+- 🏠 Drag any conversion card onto the "I have" section to set it as your base currency
 - ▾ Expand / collapse your list — collapsed mode shows your top currency only
 - Long-press and drag any card to reorder using insert-gap snapping
 - Timestamps show when rates were last refreshed, with a manual refresh button
+- Currency amounts formatted correctly per locale — JPY, KRW, TWD, THB and others display as whole numbers
 
 **Item Tracker**
 - Log item names and prices in any currency while you're out
@@ -26,8 +27,8 @@ Built with vanilla HTML, CSS, and JavaScript — no frameworks, no dependencies,
 
 **Folders**
 - Group items into collapsible folders with custom names and emojis
-- Tap a folder emoji to change it to something else
-- Long-press the folder name area to drag and reorder folders
+- Tap a folder emoji to change it inline via a popover picker
+- Long-press the folder header to drag and reorder folders
 - Drag items into folders, between folders, or drop onto the eject zone to remove from a folder
 - Drop one loose item onto another to auto-create a new folder from both
 - Rename folders inline — tap ✏️, type, press Enter or tap away
@@ -48,6 +49,7 @@ Built with vanilla HTML, CSS, and JavaScript — no frameworks, no dependencies,
 **Design**
 - 🌙 Dark mode with a toggle — auto-detects your system preference
 - JetBrains Mono throughout for a clean, technical feel
+- Full-width drag ghosts at 72% opacity — see what's underneath while dragging
 - Fully responsive and touch-optimised for mobile
 
 **PWA**
@@ -77,11 +79,15 @@ Built with vanilla HTML, CSS, and JavaScript — no frameworks, no dependencies,
 
 ## Changelog
 
+### v1.2.1
+- Full-width drag ghosts at 72% opacity — see what's underneath while dragging
+- Correct decimal formatting per currency — JPY, KRW, TWD, THB, MXN, INR and others display as whole numbers
+- Drag-to-set-base currency — drag any conversion card onto the "I have" section (replaces long-press, fixes iOS conflict)
+- Folder emoji picker — tap any folder emoji to change it inline
+
 ### v1.2.0
 - Inline amount editing on conversion cards — tap any value to edit, all others update live
-- Long-press any conversion card to set it as base currency (with toast confirmation)
-- Gap-based drag reorder for conversion cards — consistent with item tracker behaviour
-- Folder emoji picker — tap any folder emoji to change it inline
+- Gap-based drag reorder for currency cards — consistent with item tracker behaviour
 - Collapsible folders with drag-to-reorder, rename, and eject zone
 - Drag items between folders, auto-group two loose items into a new folder
 - Running totals bar with per-folder breakdown
@@ -94,12 +100,8 @@ Built with vanilla HTML, CSS, and JavaScript — no frameworks, no dependencies,
 ### v1.0.0
 - Live exchange rates with refresh timestamp and manual refresh button
 - Star up to 8 currencies — favorites drive the whole UI
-- Tap any currency to swap it as your base, amount converts automatically
-- Permanent ⇅ swap button always targets your top currency
 - Collapse / expand list — top currency always shown when collapsed
-- Drag and hold to reorder currencies
 - Item price tracker — logs in any currency, displays in current base
-- Item tracker synced to visible currencies and collapse state
 - Dark mode with system preference detection
 - PWA — installable and offline-capable
 

@@ -337,13 +337,21 @@
   .currency-card.is-editing::before {
     background: linear-gradient(90deg, var(--accent), var(--gold));
   }
-  /* Long-press base hint on base card */
   .base-hint {
     font-size: 10px;
     color: var(--ink-muted);
     margin-top: 4px;
     letter-spacing: 0.3px;
-    transition: opacity 0.3s;
+  }
+  .base-section {
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .base-section.drop-target-active {
+    border-color: var(--gold) !important;
+    background: var(--accent-light);
+  }
+  .base-section.drop-target-active .base-hint {
+    color: var(--accent);
   }
   .currency-rate {
     white-space: nowrap;
@@ -478,27 +486,7 @@
     margin: 2px 0;
   }
   /* Folder ghost */
-  .folder-drag-ghost {
-    position: fixed;
-    pointer-events: none;
-    z-index: 999;
-    background: var(--folder-bg);
-    border: 1.5px solid var(--gold);
-    border-radius: var(--radius);
-    padding: 10px 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--ink);
-    opacity: 0.95;
-    transform: rotate(-1deg);
-    min-width: 160px;
-    max-width: 260px;
-  }
+
   .folder-header {
     display: flex;
     align-items: center;
@@ -866,24 +854,20 @@
   .pill-code { font-size: 10px; color: var(--ink-soft); }
 
   /* Item ghost (drag) */
-  .item-drag-ghost {
+  .drag-clone-ghost {
     position: fixed;
     pointer-events: none;
     z-index: 999;
-    background: var(--card);
-    border: 1.5px solid var(--gold);
-    border-radius: 12px;
-    padding: 12px 14px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--ink);
-    opacity: 0.95;
-    transform: rotate(1deg);
-    min-width: 160px;
-    max-width: 260px;
-    transition: transform 0.1s;
+    opacity: 0.72;
+    transform: rotate(1.2deg) scale(1.02);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+    border-radius: var(--radius);
+    border: 1.5px solid var(--gold) !important;
+    transition: none;
+    /* Width set dynamically to match source element */
+  }
+  .drag-clone-ghost::before {
+    background: linear-gradient(90deg, var(--gold), var(--accent)) !important;
   }
 
   /* Currency selector modal */
@@ -1399,27 +1383,7 @@
     opacity: 0.35;
     border-style: dashed;
   }
-  .drag-ghost {
-    position: fixed;
-    pointer-events: none;
-    z-index: 999;
-    background: var(--card);
-    border: 1.5px solid var(--gold);
-    border-radius: var(--radius);
-    padding: 14px 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--ink);
-    opacity: 0.95;
-    transform: rotate(1.5deg);
-    min-width: 200px;
-    transition: transform 0.1s;
-  }
+
 </style>
 </head>
 <body>
@@ -1456,14 +1420,14 @@
     <!-- PANE 0: CONVERT -->
     <div class="swipe-pane">
       <div class="view" id="view-convert">
-        <div class="base-section">
+        <div class="base-section" id="baseDropTarget">
           <div class="section-label">I have</div>
           <div class="base-row">
             <div class="flag-big" id="baseFlag">🇺🇸</div>
             <div class="base-info">
               <div class="base-code" id="baseCode">USD</div>
               <div class="base-name" id="baseName">US Dollar</div>
-              <div class="base-hint">long-press any card to set as base</div>
+              <div class="base-hint" id="baseHint">drag any card here to set as base</div>
             </div>
             <div class="base-amount-wrap">
               <div class="base-amount-label">Amount</div>
@@ -1550,15 +1514,16 @@
     <button class="about-close" onclick="closeAbout()">✕</button>
     <div class="about-icon">
       <svg viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg" width="64" height="64">
-        <rect width="192" height="192" rx="42" ry="42" fill="#1a1611"/>
-        <text x="50%" y="52%" dominant-baseline="central" text-anchor="middle" font-size="130" fill="#f0ece4">💱</text>
+        <rect width="192" height="192" rx="42" ry="42" fill="#faf8f4"/>
+        <rect width="192" height="192" rx="42" ry="42" fill="none" stroke="#e0622a" stroke-width="6"/>
+        <text x="50%" y="52%" dominant-baseline="central" text-anchor="middle" font-size="130">💱</text>
       </svg>
     </div>
     <div class="about-app-name">Travel Wallet</div>
     <div class="about-tagline">Currency converter & travel tracker</div>
     <div class="about-credit">Vibe coded by Dan<br>© 2026</div>
     <div class="about-links">
-      <span class="about-version">v1.2.0</span>
+      <span class="about-version">v1.2.1</span>
       <span class="about-dot">·</span>
       <a class="about-link" href="https://github.com/uncle-jasper/travel-wallet/blob/main/README.md">changelog</a>
     </div>
@@ -1768,12 +1733,19 @@ async function fetchRates() {
   }
 }
 
-function formatAmount(converted) {
+// Currencies that display as whole numbers (no decimal places)
+const ZERO_DECIMAL = new Set(['JPY','KRW','IDR','VND','CLP','COP','HUF','ISK','TWD','THB','MXN','INR','PKR','MMK','LAK','KHR','MNT','UGX','RWF','BIF','GNF','KMF','MGA','PYG','XAF','XOF']);
+
+function getDecimals(code) {
+  return ZERO_DECIMAL.has(code) ? 0 : 2;
+}
+
+function formatAmount(converted, code) {
   if (converted === null) return '—';
-  if (converted >= 1000000) return (converted/1000000).toFixed(2) + 'M';
-  if (converted >= 10000) return converted.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  if (converted >= 100) return converted.toFixed(2);
-  return converted.toFixed(4);
+  const dec = code ? getDecimals(code) : 2;
+  if (converted >= 1000000) return (converted / 1000000).toFixed(dec === 0 ? 0 : 2) + 'M';
+  if (converted >= 1000) return converted.toFixed(dec).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return converted.toFixed(dec);
 }
 
 // ══════════════════════════════════════════════════
@@ -1784,8 +1756,8 @@ function makeCurrencyCard(code, i) {
   const rate = rates[code];
   const amount = parseFloat(document.getElementById('amountInput').value) || 0;
   const converted = rate ? (amount * rate) : null;
-  const displayAmount = formatAmount(converted);
-  const rateText = rate ? `1 ${baseCurrency} = ${rate >= 100 ? rate.toFixed(0) : rate >= 1 ? rate.toFixed(4) : rate.toFixed(6)} ${code}` : 'Rate unavailable';
+  const displayAmount = formatAmount(converted, code);
+  const rateText = rate ? `1 ${baseCurrency} = ${formatAmount(1 / (rates[baseCurrency] || 1) * (rates[code] || 1), code)} ${code}` : 'Rate unavailable';
 
   return `<div class="currency-card favorited" data-code="${code}" style="animation-delay:${i * 0.04}s">
     <div class="flag-emoji">${cur.flag}</div>
@@ -1795,7 +1767,7 @@ function makeCurrencyCard(code, i) {
     </div>
     <div class="currency-right">
       <input class="card-amount-input" type="number" inputmode="decimal"
-        value="${converted !== null ? parseFloat(converted.toFixed(converted >= 100 ? 2 : 4)) : ''}"
+        value="${converted !== null ? parseFloat(formatAmount(converted, code).replace(/,/g,'')) : ''}"
         placeholder="—"
         data-code="${code}"
         onfocus="onCardAmountFocus(this)"
@@ -1886,87 +1858,11 @@ function onCardAmountBlur(input) {
 }
 
 // ── Long-press card to set as base ───────────────────────
-let cardLongPressTimer = null;
-
 function initCardLongPress() {
-  document.querySelectorAll('.currency-card[data-code]').forEach(card => {
-    card.addEventListener('touchstart', onCardTouchStart, { passive: true });
-    card.addEventListener('touchend',   onCardTouchEnd);
-    card.addEventListener('touchmove',  onCardTouchMove, { passive: true });
-    card.addEventListener('mousedown',  onCardMouseDown);
-    card.addEventListener('mouseup',    onCardMouseUp);
-  });
-}
-
-let cardLongPressCode = null;
-let cardLongPressMoved = false;
-
-function onCardTouchStart(e) {
-  // Never start long-press from interactive elements
-  if (e.target.closest('.fav-btn, .card-amount-input, input, button')) return;
-  cardLongPressMoved = false;
-  const code = e.currentTarget.dataset.code;
-  const card = e.currentTarget;
-  const startX = e.touches[0].clientX;
-  const startY = e.touches[0].clientY;
-
-  cardLongPressTimer = setTimeout(() => {
-    if (cardLongPressMoved) return;
-    card.classList.remove('holding');
-    setBaseFromCard(code);
-  }, 550);
-
-  // Cancel immediately if finger moves
-  const onMove = ev => {
-    const dx = Math.abs(ev.touches[0].clientX - startX);
-    const dy = Math.abs(ev.touches[0].clientY - startY);
-    if (dx > 8 || dy > 8) {
-      cardLongPressMoved = true;
-      clearTimeout(cardLongPressTimer);
-      card.classList.remove('holding');
-    }
-  };
-  const onEnd = () => {
-    clearTimeout(cardLongPressTimer);
-    card.classList.remove('holding');
-    card.removeEventListener('touchmove', onMove);
-    card.removeEventListener('touchend', onEnd);
-  };
-  card.addEventListener('touchmove', onMove, { passive: true });
-  card.addEventListener('touchend', onEnd);
-
-  // Delay showing the hold state slightly so a quick tap never shows it
-  setTimeout(() => {
-    if (!cardLongPressMoved) card.classList.add('holding');
-  }, 150);
-}
-function onCardTouchMove() {
-  // handled per-card above
-}
-function onCardTouchEnd(e) {
-  clearTimeout(cardLongPressTimer);
-  e.currentTarget.classList.remove('holding');
-}
-function onCardMouseDown(e) {
-  // Never start long-press from interactive elements
-  if (e.target.closest('.fav-btn, .card-amount-input, input, button')) return;
-  const code = e.currentTarget.dataset.code;
-  const card = e.currentTarget;
-
-  cardLongPressTimer = setTimeout(() => {
-    card.classList.remove('holding');
-    setBaseFromCard(code);
-  }, 550);
-
-  setTimeout(() => card.classList.add('holding'), 150);
-}
-function onCardMouseUp(e) {
-  clearTimeout(cardLongPressTimer);
-  e.currentTarget.classList.remove('holding');
+  // No-op — base currency is now set by dragging a card onto the base section
 }
 
 function setBaseFromCard(code) {
-  if (currencyDragState) return;
   const prevBase   = baseCurrency;
   const prevAmount = parseFloat(document.getElementById('amountInput').value) || 0;
   const rateNewBase = rates[code];
@@ -2155,8 +2051,11 @@ function convertItemPrice(item) {
   return (item.price / sourceRate) * baseRate;
 }
 
-function fmtPrice(n) {
-  return n >= 10000 ? n.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',') : n.toFixed(2);
+function fmtPrice(n, code) {
+  const dec = code ? getDecimals(code) : 2;
+  if (n >= 1000000) return (n / 1000000).toFixed(dec === 0 ? 0 : 2) + 'M';
+  if (n >= 1000) return n.toFixed(dec).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return n.toFixed(dec);
 }
 
 function fmtDate(ts) {
@@ -2179,9 +2078,9 @@ function renderItemCard(item, delay = 0) {
   const priceInBase = convertItemPrice(item);
 
   // Always show what was paid (original) as primary, base conversion dimmed alongside
-  const paidLine = `${sourceCur.flag} ${fmtPrice(item.price)} ${item.currency}`;
+  const paidLine = `${sourceCur.flag} ${fmtPrice(item.price, item.currency)} ${item.currency}`;
   const baseLine = item.currency !== baseCurrency
-    ? `<span style="color:var(--ink-muted);margin-left:6px">${baseCur.flag} ${fmtPrice(priceInBase)} ${baseCurrency}</span>`
+    ? `<span style="color:var(--ink-muted);margin-left:6px">${baseCur.flag} ${fmtPrice(priceInBase, baseCurrency)} ${baseCurrency}</span>`
     : '';
 
   // Extra conversions: all other visible currencies excluding the paid currency and base
@@ -2194,7 +2093,7 @@ function renderItemCard(item, delay = 0) {
     const converted  = (item.price / sourceRate) * targetRate;
     return `<div class="item-price-pill">
       <span class="pill-flag">${cur.flag}</span>
-      <span class="pill-amount">${fmtPrice(converted)}</span>
+      <span class="pill-amount">${fmtPrice(converted, code)}</span>
       <span class="pill-code">${code}</span>
     </div>`;
   }).join('');
@@ -2245,11 +2144,11 @@ function toggleTotals() {
   if (bar) bar.classList.toggle('expanded', totalsExpanded);
 }
 
-function formatTotal(amount) {
-  if (amount >= 1000000) return (amount / 1000000).toFixed(2) + 'M';
-  if (amount >= 10000)   return amount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  if (amount >= 100)     return amount.toFixed(2);
-  return amount.toFixed(2);
+function formatTotal(amount, code) {
+  const dec = code ? getDecimals(code) : 2;
+  if (amount >= 1000000) return (amount / 1000000).toFixed(dec === 0 ? 0 : 2) + 'M';
+  if (amount >= 1000)    return amount.toFixed(dec).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return amount.toFixed(dec);
 }
 
 // Convert item price into an arbitrary target currency (not just baseCurrency)
@@ -2282,7 +2181,7 @@ function renderTotalsBar() {
 
   // Grand total
   const grandTotal = allItems.reduce((sum, item) => sum + convertItemPriceTo(item, tc), 0);
-  grand.textContent = formatTotal(grandTotal);
+  grand.textContent = formatTotal(grandTotal, tc);
   if (flagEl) flagEl.textContent = cur.flag;
 
   // Populate inline select with visible currencies
@@ -2307,7 +2206,7 @@ function renderTotalsBar() {
       <span class="totals-row-emoji">${folder.emoji}</span>
       <span class="totals-row-name">${folder.name}</span>
       <span class="totals-row-count">${items.length}</span>
-      <span class="totals-row-amount">${cur.flag} ${formatTotal(total)}</span>
+      <span class="totals-row-amount">${cur.flag} ${formatTotal(total, tc)}</span>
     </div>`;
   });
 
@@ -2328,7 +2227,7 @@ function renderTotalsBar() {
         <span class="totals-row-emoji">${ic.flag}</span>
         <span class="totals-row-name">${item.name}</span>
         <span class="totals-row-count">${item.currency}</span>
-        <span class="totals-row-amount">${cur.flag} ${formatTotal(converted)}</span>
+        <span class="totals-row-amount">${cur.flag} ${formatTotal(converted, tc)}</span>
       </div>`;
     });
   }
@@ -2367,7 +2266,7 @@ function renderTrackedItems() {
           <span class="folder-chevron">▶</span>
           <span class="folder-emoji" onclick="pickFolderEmoji(${entry.id}, event)" style="cursor:pointer" title="Change emoji">${entry.emoji}</span>
           <span class="folder-name-display" id="fname-${entry.id}">${entry.name}</span>
-          <span class="folder-count">${folderItems.length} · ${getCurrency(getTotalsCurrency()).flag} ${formatTotal(folderItems.reduce((s,i)=>s+convertItemPriceTo(i,getTotalsCurrency()),0))}</span>
+          <span class="folder-count">${folderItems.length} · ${getCurrency(getTotalsCurrency()).flag} ${formatTotal(folderItems.reduce((s,i)=>s+convertItemPriceTo(i,getTotalsCurrency()),0), getTotalsCurrency())}</span>
           <button class="folder-rename-btn" onclick="startRenameFolder(${entry.id}, event)" title="Rename">✏️</button>
           <button class="folder-delete-btn" onclick="deleteFolder(${entry.id}, event)">✕</button>
         </div>
@@ -2524,6 +2423,33 @@ function deleteItem(id) {
 }
 
 // ══════════════════════════════════════════════════
+//  SHARED DRAG GHOST HELPER
+// ══════════════════════════════════════════════════
+function createDragGhost(sourceEl, touchX, touchY) {
+  const rect  = sourceEl.getBoundingClientRect();
+  const clone = sourceEl.cloneNode(true);
+  clone.className = (clone.className || '') + ' drag-clone-ghost';
+  // Remove animation delay so it appears instantly
+  clone.style.animationDelay = '0s';
+  clone.style.animation = 'none';
+  clone.style.width  = rect.width  + 'px';
+  clone.style.height = rect.height + 'px';
+  // Position so finger is at the same relative spot it was on the card
+  clone.style.left = (touchX - (touchX - rect.left)) + 'px';
+  clone.style.top  = (touchY - (touchY - rect.top))  + 'px';
+  // Store offset so we can keep the finger in the same spot while moving
+  clone._offsetX = touchX - rect.left;
+  clone._offsetY = touchY - rect.top;
+  document.body.appendChild(clone);
+  return clone;
+}
+
+function moveDragGhost(ghost, cx, cy) {
+  ghost.style.left = (cx - ghost._offsetX) + 'px';
+  ghost.style.top  = (cy - ghost._offsetY) + 'px';
+}
+
+// ══════════════════════════════════════════════════
 //  ITEM DRAG & DROP (reorder + drop into folder)
 // ══════════════════════════════════════════════════
 let itemDragState = null;
@@ -2577,15 +2503,8 @@ function startItemDrag(card, x, y, type) {
   const item = trackerData.find(d => d.type === 'item' && d.id === itemId);
   if (!item) return;
 
-  const ghost = document.createElement('div');
-  ghost.className = 'item-drag-ghost';
-  ghost.textContent = item.name;
-  document.body.appendChild(ghost);
-  ghost.style.left = (x - 24) + 'px';
-  ghost.style.top = (y - 20) + 'px';
-
+  const ghost = createDragGhost(card, x, y);
   card.classList.add('item-dragging');
-
   itemDragState = { itemId, ghost, overItemId: null, overFolderId: null, overEject: false, overGapIndex: null };
 
   // Show eject zone if item is inside a folder
@@ -2609,8 +2528,7 @@ function onItemDragMove(e) {
   const cx = e.touches ? e.touches[0].clientX : e.clientX;
   const cy = e.touches ? e.touches[0].clientY : e.clientY;
 
-  itemDragState.ghost.style.left = (cx - 24) + 'px';
-  itemDragState.ghost.style.top = (cy - 20) + 'px';
+  moveDragGhost(itemDragState.ghost, cx, cy);
 
   // Clear highlights
   document.querySelectorAll('.item-card').forEach(c => c.classList.remove('item-drag-over'));
@@ -2828,13 +2746,7 @@ function startFolderDrag(block, x, y, type) {
   const folder = trackerData.find(d => d.type === 'folder' && d.id === folderId);
   if (!folder) return;
 
-  const ghost = document.createElement('div');
-  ghost.className = 'folder-drag-ghost';
-  ghost.innerHTML = `<span style="font-size:18px">${folder.emoji}</span><span>${folder.name}</span>`;
-  document.body.appendChild(ghost);
-  ghost.style.left = (x - 24) + 'px';
-  ghost.style.top  = (y - 22) + 'px';
-
+  const ghost = createDragGhost(block, x, y);
   block.classList.add('folder-dragging');
   folderDragState = { folderId, ghost, overGapIndex: null };
 
@@ -2853,8 +2765,7 @@ function onFolderDragMove(e) {
   const cx = e.touches ? e.touches[0].clientX : e.clientX;
   const cy = e.touches ? e.touches[0].clientY : e.clientY;
 
-  folderDragState.ghost.style.left = (cx - 24) + 'px';
-  folderDragState.ghost.style.top  = (cy - 22) + 'px';
+  moveDragGhost(folderDragState.ghost, cx, cy);
 
   // Highlight nearest insert gap
   document.querySelectorAll('.insert-gap').forEach(g => g.classList.remove('active'));
@@ -2987,14 +2898,9 @@ function onCurrencyMouseStart(e) {
 function startCurrencyDrag(card, x, y, type) {
   const code = card.dataset.code;
   const cur  = getCurrency(code);
-  const ghost = document.createElement('div');
-  ghost.className = 'drag-ghost';
-  ghost.innerHTML = `<span style="font-size:22px">${cur.flag}</span><span>${code}</span>`;
-  document.body.appendChild(ghost);
-  ghost.style.left = (x - 24) + 'px';
-  ghost.style.top  = (y - 28) + 'px';
+  const ghost = createDragGhost(card, x, y);
   card.classList.add('dragging');
-  currencyDragState = { code, ghost, overGapIndex: null };
+  currencyDragState = { code, ghost, overGapIndex: null, overBase: false };
 
   if (type === 'touch') {
     document.addEventListener('touchmove', onCurrencyDragMove, { passive: false });
@@ -3010,22 +2916,36 @@ function onCurrencyDragMove(e) {
   e.preventDefault();
   const cx = e.touches ? e.touches[0].clientX : e.clientX;
   const cy = e.touches ? e.touches[0].clientY : e.clientY;
-  currencyDragState.ghost.style.left = (cx - 24) + 'px';
-  currencyDragState.ghost.style.top  = (cy - 28) + 'px';
+  moveDragGhost(currencyDragState.ghost, cx, cy);
 
-  // Find nearest insert gap in results list
+  // Check if hovering over the base drop target
+  const baseTarget = document.getElementById('baseDropTarget');
+  currencyDragState.overBase = false;
+  if (baseTarget) {
+    const rect = baseTarget.getBoundingClientRect();
+    if (cy >= rect.top && cy <= rect.bottom && cx >= rect.left && cx <= rect.right) {
+      baseTarget.classList.add('drop-target-active');
+      currencyDragState.overBase = true;
+    } else {
+      baseTarget.classList.remove('drop-target-active');
+    }
+  }
+
+  // Find nearest insert gap (only when not over base)
   document.querySelectorAll('#resultsList .insert-gap').forEach(g => g.classList.remove('active'));
   currencyDragState.overGapIndex = null;
-  let best = null, bestDist = Infinity;
-  document.querySelectorAll('#resultsList .insert-gap').forEach(gap => {
-    const rect = gap.getBoundingClientRect();
-    const mid  = rect.top + rect.height / 2;
-    const dist = Math.abs(cy - mid);
-    if (dist < bestDist && dist < 80) { bestDist = dist; best = gap; }
-  });
-  if (best) {
-    best.classList.add('active');
-    currencyDragState.overGapIndex = parseInt(best.dataset.curGap);
+  if (!currencyDragState.overBase) {
+    let best = null, bestDist = Infinity;
+    document.querySelectorAll('#resultsList .insert-gap').forEach(gap => {
+      const rect = gap.getBoundingClientRect();
+      const mid  = rect.top + rect.height / 2;
+      const dist = Math.abs(cy - mid);
+      if (dist < bestDist && dist < 80) { bestDist = dist; best = gap; }
+    });
+    if (best) {
+      best.classList.add('active');
+      currencyDragState.overGapIndex = parseInt(best.dataset.curGap);
+    }
   }
 }
 
@@ -3039,17 +2959,23 @@ function onCurrencyDragEnd() {
   currencyDragState.ghost.remove();
   document.querySelectorAll('#resultsList .currency-card').forEach(c => c.classList.remove('dragging', 'holding'));
   document.querySelectorAll('#resultsList .insert-gap').forEach(g => g.classList.remove('active'));
+  const baseTarget = document.getElementById('baseDropTarget');
+  if (baseTarget) baseTarget.classList.remove('drop-target-active');
 
-  const { code, overGapIndex } = currencyDragState;
+  const { code, overGapIndex, overBase } = currencyDragState;
   currencyDragState = null;
+
+  if (overBase) {
+    // Drop onto base section → set as new base currency
+    setBaseFromCard(code);
+    return;
+  }
 
   if (overGapIndex === null) return;
 
   const fromIdx = favorites.indexOf(code);
   if (fromIdx === -1) return;
 
-  // Gap index maps directly to position in favorites array
-  // Adjust for removal of the dragged item
   let toIdx = overGapIndex;
   if (toIdx > fromIdx) toIdx--;
   if (toIdx === fromIdx) return;
