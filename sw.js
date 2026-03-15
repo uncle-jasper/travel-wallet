@@ -1,4 +1,4 @@
-const CACHE = 'travel-wallet-v1';
+const CACHE = 'travel-wallet-v1.2.0';
 const ASSETS = [
   './',
   './index.html',
@@ -9,10 +9,12 @@ self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE).then(c => c.addAll(ASSETS)).catch(() => {})
   );
+  // Activate immediately — don't wait for old tabs to close
   self.skipWaiting();
 });
 
 self.addEventListener('activate', e => {
+  // Delete all old caches that don't match current version
   e.waitUntil(
     caches.keys().then(keys =>
       Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
@@ -22,7 +24,7 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
-  // Always go network-first for exchange rate API
+  // Always network-first for exchange rate API
   if (e.request.url.includes('open.er-api.com')) {
     e.respondWith(
       fetch(e.request).catch(() => caches.match(e.request))
