@@ -15,15 +15,24 @@ Built with vanilla HTML, CSS, and JavaScript — no frameworks, no dependencies,
 - 🏠 Drag any conversion card onto the "I have" section to set it as your base currency
 - ▾ Expand / collapse your list — collapsed mode shows your top currency only
 - Long-press and drag any card to reorder using insert-gap snapping
-- Timestamps show when rates were last refreshed, with a manual refresh button
 - Currency amounts formatted correctly per locale — JPY, KRW, TWD, THB and others display as whole numbers
+- 80+ currencies across all regions
+
+**⚙ Unit Converter Drawer**
+- Tap ⚙ in the Conversions header to reveal a compact drawer — tap again to hide
+- 🕐 **Time** — live clocks for local and home timezone, ticking every second. AM/PM toggle persists across sessions. Tap ⌂ to set current timezone as home
+- 🌡️ **Temp** — °C ↔ °F. Tap ◎ to auto-fetch current temperature and location via GPS. Location name appears inline next to Temp. Refreshes automatically after 30 minutes if you've moved
+- 📏 **Dist** — km ↔ mi
+- ⚖️ **Weight** — kg ↔ lb
 
 **Item Tracker**
 - Log item names and prices in any currency while you're out
 - Every item shows what you paid (original currency) with your home currency equivalent dimmed alongside
 - Extra starred currencies appear as conversion pills below each item
 - Date-stamped with the time you logged each purchase (`Mar 15 · 14:32`)
+- Drag to reorder items — including within folders
 - Swipe left from the Convert tab to reach the tracker instantly
+- 🗑 **Clear trip** — wipe everything at end of trip with a 15-second undo window
 
 **Folders**
 - Group items into collapsible folders with custom names and emojis
@@ -43,6 +52,7 @@ Built with vanilla HTML, CSS, and JavaScript — no frameworks, no dependencies,
 
 **Undo Delete**
 - Deleting an item or folder shows a 4.5-second undo toast
+- Clear trip gives a 15-second undo window
 - Tap Undo any time before it expires to restore everything exactly as it was
 - Progress bar in the toast drains visually so you know how long you have
 
@@ -79,32 +89,37 @@ Built with vanilla HTML, CSS, and JavaScript — no frameworks, no dependencies,
 
 ## Changelog
 
-### v1.2.2
-- Disabled text selection during drag gestures on iOS — no more copy/paste popover while reordering
+### v1.3.0
+- ⚙ Unit converter drawer — Time, Temp, Distance, Weight in a collapsible panel
+- Live dual clocks (Local / Home) with AM/PM toggle and DST-aware via Intl API
+- Auto temperature via GPS using Open-Meteo (free, no API key) with 30-minute location cache
+- Reverse geocoding via Nominatim — location name shown inline next to Temp label
+- Set home timezone with ⌂ button, persists across sessions
+- 🗑 Clear trip button with 15-second undo window
+- 50+ new currencies added — Africa, Middle East, South Asia, Eastern Europe, Americas, Central Asia
+- Drag to reorder items within folders
+- Disabled text selection during drag gestures on iOS
 
 ### v1.2.1
 - Full-width drag ghosts at 72% opacity — see what's underneath while dragging
 - Correct decimal formatting per currency — JPY, KRW, TWD, THB, MXN, INR and others display as whole numbers
-- Drag-to-set-base currency — drag any conversion card onto the "I have" section (replaces long-press, fixes iOS conflict)
+- Drag-to-set-base currency — drag any conversion card onto the "I have" section
 - Folder emoji picker — tap any folder emoji to change it inline
 
 ### v1.2.0
 - Inline amount editing on conversion cards — tap any value to edit, all others update live
-- Gap-based drag reorder for currency cards — consistent with item tracker behaviour
+- Gap-based drag reorder for currency cards
 - Collapsible folders with drag-to-reorder, rename, and eject zone
 - Drag items between folders, auto-group two loose items into a new folder
-- Running totals bar with per-folder breakdown
-- Inline currency selector on totals — switch display currency without affecting base
-- Undo-delete with animated progress toast (4.5s window)
-- Date stamps on every item (`Mar 15 · 14:32`)
+- Running totals bar with per-folder breakdown and inline currency selector
+- Undo-delete with animated progress toast
+- Date stamps on every item
 - Swipe navigation between Convert and Item Tracker tabs
-- Consistent item card layout — original currency always primary, base currency dimmed
 
 ### v1.0.0
-- Live exchange rates with refresh timestamp and manual refresh button
-- Star up to 8 currencies — favorites drive the whole UI
-- Collapse / expand list — top currency always shown when collapsed
-- Item price tracker — logs in any currency, displays in current base
+- Live exchange rates with refresh timestamp
+- Star up to 8 currencies
+- Item price tracker with multi-currency display
 - Dark mode with system preference detection
 - PWA — installable and offline-capable
 

@@ -449,6 +449,12 @@
     transition: all 0.2s;
   }
   .add-folder-btn:active { background: var(--border); }
+  .clear-trip-btn {
+    color: var(--accent);
+    border-color: rgba(200,82,26,0.3);
+    background: var(--accent-light);
+  }
+  .clear-trip-btn:active { background: #fde8d5; }
 
   /* ─── Folder styles ─────────────────────────────────── */
   .folder-block {
@@ -1097,6 +1103,200 @@
     color: var(--ink-muted);
   }
 
+  /* ── Unit converter drawer ─────────────────────────── */
+  .unit-toggle-btn {
+    background: none;
+    border: 1.5px solid var(--border);
+    color: var(--ink-muted);
+    border-radius: 8px;
+    width: 28px; height: 28px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .unit-toggle-btn.active {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--accent-light);
+  }
+  .unit-toggle-btn:active { transform: scale(0.92); }
+
+  .unit-drawer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-bottom: 0;
+  }
+  .unit-drawer.open {
+    max-height: 400px;
+    margin-bottom: 12px;
+  }
+  .unit-drawer-inner {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 14px 14px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .unit-group {}
+  .unit-group-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 7px;
+  }
+  .unit-icon { font-size: 14px; line-height: 1; }
+  .unit-group-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    flex: 1;
+  }
+  .unit-location-label { display: none; } /* unused, replaced by inline */
+  .unit-location-inline {
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--ink-muted);
+    letter-spacing: 0.2px;
+  }
+  .unit-location-inline:not(:empty)::before {
+    content: ' · ';
+    color: var(--ink-muted);
+  }
+  .unit-ampm-toggle {
+    background: var(--border);
+    border: none;
+    border-radius: 6px;
+    color: var(--ink-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 3px 7px;
+    cursor: pointer;
+    transition: all 0.2s;
+    line-height: 1.4;
+    flex-shrink: 0;
+  }
+  .unit-ampm-toggle.active {
+    background: var(--accent-light);
+    color: var(--accent);
+  }
+  .unit-ampm-toggle:active { transform: scale(0.92); }
+
+  .unit-locate-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--ink-muted);
+    font-size: 12px;
+    padding: 2px 6px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    transition: all 0.2s;
+    line-height: 1.4;
+  }
+  .unit-locate-btn:active { color: var(--accent); border-color: var(--accent); }
+  .unit-locate-btn.spinning { animation: spin 0.8s linear infinite; pointer-events: none; }
+
+  .unit-fields {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .unit-field-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 10px;
+    gap: 5px;
+    transition: border-color 0.2s;
+  }
+  .unit-field-wrap:focus-within { border-color: var(--accent); }
+  .unit-input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    min-width: 0;
+    caret-color: var(--accent);
+  }
+  .unit-input:focus { color: var(--accent); }
+  .unit-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--ink-muted);
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+  }
+  .unit-sep {
+    color: var(--ink-muted);
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .unit-time-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .unit-time-block {
+    flex: 1;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 9px 12px;
+    text-align: center;
+  }
+  .unit-time-sub {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 4px;
+  }
+  .unit-time-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: 0.5px;
+    line-height: 1;
+  }
+  .unit-time-label {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-top: 4px;
+  }
+  /* Highlight when times differ from home */
+  .unit-time-block.away .unit-time-value { color: var(--accent); }
+
+  .unit-weather-status {
+    font-size: 10px;
+    color: var(--ink-muted);
+    text-align: center;
+    padding: 4px 0 2px;
+    min-height: 16px;
+    letter-spacing: 0.3px;
+  }
+
   .loading-text {
     text-align: center;
     color: var(--ink-muted);
@@ -1441,6 +1641,97 @@
 
         <div class="section-header">
           <span class="section-title">Conversions</span>
+          <button class="unit-toggle-btn" id="unitToggleBtn" onclick="toggleUnitDrawer()" title="Unit converter">⚙</button>
+        </div>
+
+        <!-- Unit converter drawer -->
+        <div class="unit-drawer" id="unitDrawer">
+          <div class="unit-drawer-inner">
+
+            <!-- Time -->
+            <div class="unit-group">
+              <div class="unit-group-header">
+                <span class="unit-icon">🕐</span>
+                <span class="unit-group-label">Time</span>
+                <button class="unit-ampm-toggle" id="ampmToggle" onclick="toggleAmPm()">24h</button>
+                <button class="unit-locate-btn" id="setHomeTzBtn" onclick="setHomeTz()" title="Set current timezone as home">⌂</button>
+              </div>
+              <div class="unit-time-row">
+                <div class="unit-time-block">
+                  <div class="unit-time-sub">Local</div>
+                  <div class="unit-time-value" id="localTimeDisplay">--:--</div>
+                  <div class="unit-time-label" id="localTzLabel">--</div>
+                </div>
+                <span class="unit-sep">·</span>
+                <div class="unit-time-block">
+                  <div class="unit-time-sub">Home</div>
+                  <div class="unit-time-value" id="homeTimeDisplay">--:--</div>
+                  <div class="unit-time-label" id="homeTzCityLabel">--</div>
+                </div>
+              </div>
+            </div>
+
+                        <!-- Temperature -->
+            <div class="unit-group">
+              <div class="unit-group-header">
+                <span class="unit-icon">🌡️</span>
+                <span class="unit-group-label">Temp<span class="unit-location-inline" id="unitLocationLabel"></span></span>
+                <button class="unit-locate-btn" id="locateBtn" onclick="fetchLocalTemp()" title="Get local temperature">◎</button>
+              </div>
+              <div class="unit-fields">
+                <div class="unit-field-wrap">
+                  <input class="unit-input" id="celsiusInput" type="number" inputmode="decimal" placeholder="°C" oninput="convertTemp('c')">
+                  <span class="unit-label">°C</span>
+                </div>
+                <span class="unit-sep">⇌</span>
+                <div class="unit-field-wrap">
+                  <input class="unit-input" id="fahrenheitInput" type="number" inputmode="decimal" placeholder="°F" oninput="convertTemp('f')">
+                  <span class="unit-label">°F</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Distance -->
+            <div class="unit-group">
+              <div class="unit-group-header">
+                <span class="unit-icon">📏</span>
+                <span class="unit-group-label">Dist</span>
+              </div>
+              <div class="unit-fields">
+                <div class="unit-field-wrap">
+                  <input class="unit-input" id="kmInput" type="number" inputmode="decimal" placeholder="km" oninput="convertDist('km')">
+                  <span class="unit-label">km</span>
+                </div>
+                <span class="unit-sep">⇌</span>
+                <div class="unit-field-wrap">
+                  <input class="unit-input" id="miInput" type="number" inputmode="decimal" placeholder="mi" oninput="convertDist('mi')">
+                  <span class="unit-label">mi</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Weight -->
+            <div class="unit-group">
+              <div class="unit-group-header">
+                <span class="unit-icon">⚖️</span>
+                <span class="unit-group-label">Weight</span>
+              </div>
+              <div class="unit-fields">
+                <div class="unit-field-wrap">
+                  <input class="unit-input" id="kgInput" type="number" inputmode="decimal" placeholder="kg" oninput="convertWeight('kg')">
+                  <span class="unit-label">kg</span>
+                </div>
+                <span class="unit-sep">⇌</span>
+                <div class="unit-field-wrap">
+                  <input class="unit-input" id="lbInput" type="number" inputmode="decimal" placeholder="lb" oninput="convertWeight('lb')">
+                  <span class="unit-label">lb</span>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+          <div class="unit-weather-status" id="unitWeatherStatus"></div>
         </div>
 
         <div class="results-list" id="resultsList">
@@ -1481,6 +1772,7 @@
           <span class="section-title">My Items</span>
           <div class="tracker-actions">
             <button class="add-folder-btn" onclick="openFolderModal()">📁 New Folder</button>
+            <button class="add-folder-btn clear-trip-btn" onclick="openClearConfirm()" title="Clear all items">🗑 Clear trip</button>
           </div>
         </div>
 
@@ -1524,7 +1816,7 @@
     <div class="about-tagline">Currency converter & travel tracker</div>
     <div class="about-credit">Vibe coded by Dan<br>© 2026</div>
     <div class="about-links">
-      <span class="about-version">v1.2.2</span>
+      <span class="about-version">v1.3.0</span>
       <span class="about-dot">·</span>
       <a class="about-link" href="https://github.com/uncle-jasper/travel-wallet/blob/main/README.md">changelog</a>
     </div>
@@ -1558,6 +1850,19 @@
     <div class="folder-modal-actions">
       <button class="folder-modal-cancel" onclick="closeFolderModal()">Cancel</button>
       <button class="folder-modal-create" onclick="createFolder()">Create Folder</button>
+    </div>
+  </div>
+</div>
+
+<!-- CLEAR TRIP CONFIRM MODAL -->
+<div class="folder-modal-overlay" id="clearConfirmOverlay" onclick="closeClearConfirm(event)">
+  <div class="folder-modal" style="text-align:center">
+    <div style="font-size:36px;margin-bottom:12px">🗑️</div>
+    <div class="folder-modal-title">Clear entire trip?</div>
+    <div class="folder-modal-sub" style="margin-bottom:20px">All items and folders will be removed.<br>You'll have 15 seconds to undo.</div>
+    <div class="folder-modal-actions">
+      <button class="folder-modal-cancel" onclick="closeClearConfirm()">Cancel</button>
+      <button class="folder-modal-create" style="background:var(--accent)" onclick="clearTrip()">Clear trip</button>
     </div>
   </div>
 </div>
@@ -1612,6 +1917,59 @@ const CURRENCIES = [
   { code:'COP', name:'Colombian Peso', flag:'🇨🇴' },
   { code:'ARS', name:'Argentine Peso', flag:'🇦🇷' },
   { code:'PEN', name:'Peruvian Sol', flag:'🇵🇪' },
+  // Africa
+  { code:'NGN', name:'Nigerian Naira', flag:'🇳🇬' },
+  { code:'KES', name:'Kenyan Shilling', flag:'🇰🇪' },
+  { code:'GHS', name:'Ghanaian Cedi', flag:'🇬🇭' },
+  { code:'ETB', name:'Ethiopian Birr', flag:'🇪🇹' },
+  { code:'TZS', name:'Tanzanian Shilling', flag:'🇹🇿' },
+  { code:'UGX', name:'Ugandan Shilling', flag:'🇺🇬' },
+  { code:'MAD', name:'Moroccan Dirham', flag:'🇲🇦' },
+  { code:'TND', name:'Tunisian Dinar', flag:'🇹🇳' },
+  { code:'XOF', name:'West African CFA Franc', flag:'🌍' },
+  { code:'XAF', name:'Central African CFA Franc', flag:'🌍' },
+  // Middle East & Central Asia
+  { code:'QAR', name:'Qatari Riyal', flag:'🇶🇦' },
+  { code:'KWD', name:'Kuwaiti Dinar', flag:'🇰🇼' },
+  { code:'BHD', name:'Bahraini Dinar', flag:'🇧🇭' },
+  { code:'OMR', name:'Omani Rial', flag:'🇴🇲' },
+  { code:'JOD', name:'Jordanian Dinar', flag:'🇯🇴' },
+  { code:'LBP', name:'Lebanese Pound', flag:'🇱🇧' },
+  { code:'PKR', name:'Pakistani Rupee', flag:'🇵🇰' },
+  { code:'BDT', name:'Bangladeshi Taka', flag:'🇧🇩' },
+  { code:'LKR', name:'Sri Lankan Rupee', flag:'🇱🇰' },
+  { code:'NPR', name:'Nepalese Rupee', flag:'🇳🇵' },
+  // Europe (non-Euro)
+  { code:'HRK', name:'Croatian Kuna', flag:'🇭🇷' },
+  { code:'RON', name:'Romanian Leu', flag:'🇷🇴' },
+  { code:'BGN', name:'Bulgarian Lev', flag:'🇧🇬' },
+  { code:'RSD', name:'Serbian Dinar', flag:'🇷🇸' },
+  { code:'ISK', name:'Icelandic Króna', flag:'🇮🇸' },
+  { code:'UAH', name:'Ukrainian Hryvnia', flag:'🇺🇦' },
+  { code:'GEL', name:'Georgian Lari', flag:'🇬🇪' },
+  { code:'AMD', name:'Armenian Dram', flag:'🇦🇲' },
+  { code:'AZN', name:'Azerbaijani Manat', flag:'🇦🇿' },
+  // Americas
+  { code:'UYU', name:'Uruguayan Peso', flag:'🇺🇾' },
+  { code:'BOB', name:'Bolivian Boliviano', flag:'🇧🇴' },
+  { code:'PYG', name:'Paraguayan Guaraní', flag:'🇵🇾' },
+  { code:'GTQ', name:'Guatemalan Quetzal', flag:'🇬🇹' },
+  { code:'CRC', name:'Costa Rican Colón', flag:'🇨🇷' },
+  { code:'DOP', name:'Dominican Peso', flag:'🇩🇴' },
+  { code:'JMD', name:'Jamaican Dollar', flag:'🇯🇲' },
+  { code:'TTD', name:'Trinidad & Tobago Dollar', flag:'🇹🇹' },
+  // Asia-Pacific
+  { code:'MMK', name:'Myanmar Kyat', flag:'🇲🇲' },
+  { code:'KHR', name:'Cambodian Riel', flag:'🇰🇭' },
+  { code:'LAK', name:'Lao Kip', flag:'🇱🇦' },
+  { code:'BND', name:'Brunei Dollar', flag:'🇧🇳' },
+  { code:'MNT', name:'Mongolian Tögrög', flag:'🇲🇳' },
+  { code:'FJD', name:'Fijian Dollar', flag:'🇫🇯' },
+  { code:'PGK', name:'Papua New Guinean Kina', flag:'🇵🇬' },
+  // Other
+  { code:'RUB', name:'Russian Ruble', flag:'🇷🇺' },
+  { code:'KZT', name:'Kazakhstani Tenge', flag:'🇰🇿' },
+  { code:'UZS', name:'Uzbekistani Som', flag:'🇺🇿' },
 ];
 
 const FOLDER_EMOJIS = ['📁','🛍️','☕','🍜','🏨','🚕','🎁','🍺','🎡','🛒','💊','🎭','🏖️','✈️','🗺️','💼'];
@@ -1735,7 +2093,7 @@ async function fetchRates() {
 }
 
 // Currencies that display as whole numbers (no decimal places)
-const ZERO_DECIMAL = new Set(['JPY','KRW','IDR','VND','CLP','COP','HUF','ISK','TWD','THB','MXN','INR','PKR','MMK','LAK','KHR','MNT','UGX','RWF','BIF','GNF','KMF','MGA','PYG','XAF','XOF']);
+const ZERO_DECIMAL = new Set(['JPY','KRW','IDR','VND','CLP','COP','HUF','ISK','TWD','THB','MXN','INR','PKR','MMK','LAK','KHR','MNT','NGN','TZS','UGX','RWF','BIF','GNF','KMF','MGA','PYG','XAF','XOF','UZS','KZT','RSD','AMD','LBP']);
 
 function getDecimals(code) {
   return ZERO_DECIMAL.has(code) ? 0 : 2;
@@ -1840,14 +2198,15 @@ function onCardAmountInput(input) {
   if (isNaN(val) || !rates[code]) return;
   // Convert back to base amount
   const newBaseAmount = val / rates[code];
-  document.getElementById('amountInput').value = parseFloat(newBaseAmount.toFixed(6));
+  const baseDec = getDecimals(document.getElementById('baseCode').textContent.trim());
+  document.getElementById('amountInput').value = parseFloat(newBaseAmount.toFixed(baseDec === 0 ? 0 : 2));
   // Update all other card inputs without full re-render (avoids losing focus)
   document.querySelectorAll('.card-amount-input').forEach(inp => {
     if (inp === input) return;
     const c = inp.dataset.code;
     if (rates[c]) {
       const converted = newBaseAmount * rates[c];
-      inp.value = parseFloat(formatAmount(converted).replace(/,/g, ''));
+      inp.value = parseFloat(formatAmount(converted, c).replace(/,/g, ''));
     }
   });
 }
@@ -2272,7 +2631,8 @@ function renderTrackedItems() {
           <button class="folder-delete-btn" onclick="deleteFolder(${entry.id}, event)">✕</button>
         </div>
         <div class="folder-body">
-          ${folderItems.map((item, ii) => renderItemCard(item, ii * 0.04)).join('')}
+          ${folderItems.map((item, ii) => `<div class="insert-gap folder-insert-gap" data-folder-gap="${entry.id}-${ii}"></div>${renderItemCard(item, ii * 0.04)}`).join('')}
+          ${folderItems.length > 0 ? `<div class="insert-gap folder-insert-gap" data-folder-gap="${entry.id}-${folderItems.length}"></div>` : ''}
           <div class="folder-drop-zone" data-drop-folder="${entry.id}">Drop items here</div>
         </div>
       </div>`;
@@ -2573,13 +2933,15 @@ function onItemDragMove(e) {
     }
   }
 
-  // For loose items, also highlight insert gaps for repositioning between folders
-  const draggedItem = trackerData.find(d => d.type === 'item' && d.id === itemDragState.itemId);
+  // Clear all gap highlights
   document.querySelectorAll('.insert-gap').forEach(g => g.classList.remove('active'));
   itemDragState.overGapIndex = null;
+  itemDragState.overFolderGap = null;
 
-  if (!itemDragState.overFolderId && !itemDragState.overEject && draggedItem && !draggedItem.folderId) {
-    // Check other item cards
+  const draggedItem = trackerData.find(d => d.type === 'item' && d.id === itemDragState.itemId);
+
+  if (!itemDragState.overFolderId && !itemDragState.overEject) {
+    // Check other item cards in the same context
     document.querySelectorAll(`.item-card[data-item-id]:not([data-item-id="${itemDragState.itemId}"])`).forEach(card => {
       const rect = card.getBoundingClientRect();
       if (cy >= rect.top && cy <= rect.bottom) {
@@ -2588,18 +2950,33 @@ function onItemDragMove(e) {
       }
     });
 
-    // If not hovering a card, find nearest gap for inserting between folders
     if (!itemDragState.overItemId) {
-      let best = null, bestDist = Infinity;
-      document.querySelectorAll('.insert-gap').forEach(gap => {
-        const rect = gap.getBoundingClientRect();
-        const mid  = rect.top + rect.height / 2;
-        const dist = Math.abs(cy - mid);
-        if (dist < bestDist && dist < 60) { bestDist = dist; best = gap; }
-      });
-      if (best) {
-        best.classList.add('active');
-        itemDragState.overGapIndex = parseInt(best.dataset.gapIndex);
+      if (draggedItem && draggedItem.folderId) {
+        // Folder item — find nearest gap inside the same folder
+        let best = null, bestDist = Infinity;
+        document.querySelectorAll(`.folder-insert-gap[data-folder-gap^="${draggedItem.folderId}-"]`).forEach(gap => {
+          const rect = gap.getBoundingClientRect();
+          const mid  = rect.top + rect.height / 2;
+          const dist = Math.abs(cy - mid);
+          if (dist < bestDist && dist < 60) { bestDist = dist; best = gap; }
+        });
+        if (best) {
+          best.classList.add('active');
+          itemDragState.overFolderGap = best.dataset.folderGap;
+        }
+      } else if (draggedItem && !draggedItem.folderId) {
+        // Loose item — find nearest top-level gap
+        let best = null, bestDist = Infinity;
+        document.querySelectorAll('.insert-gap:not(.folder-insert-gap)').forEach(gap => {
+          const rect = gap.getBoundingClientRect();
+          const mid  = rect.top + rect.height / 2;
+          const dist = Math.abs(cy - mid);
+          if (dist < bestDist && dist < 60) { bestDist = dist; best = gap; }
+        });
+        if (best) {
+          best.classList.add('active');
+          itemDragState.overGapIndex = parseInt(best.dataset.gapIndex);
+        }
       }
     }
   }
@@ -2620,7 +2997,7 @@ function onItemDragEnd(e) {
   const ez = document.getElementById('ejectZone');
   if (ez) { ez.classList.remove('dragging-active', 'highlight'); }
 
-  const { itemId, overItemId, overFolderId, overEject, overGapIndex } = itemDragState;
+  const { itemId, overItemId, overFolderId, overEject, overGapIndex, overFolderGap } = itemDragState;
   itemDragState = null;
 
   const item = trackerData.find(d => d.type === 'item' && d.id === itemId);
@@ -2665,6 +3042,37 @@ function onItemDragEnd(e) {
       saveTrackerData();
       renderTrackedItems();
     }
+  } else if (overFolderGap && item.folderId) {
+    // Reorder item within its folder using gap index
+    // overFolderGap format: "folderId-gapIndex"
+    const parts   = overFolderGap.split('-');
+    const toIndex = parseInt(parts[parts.length - 1]);
+    const folderItems = trackerData.filter(d => d.type === 'item' && d.folderId === item.folderId);
+    const fromIndex   = folderItems.findIndex(d => d.id === itemId);
+    if (fromIndex === -1) return;
+
+    // Adjust target for removal
+    let adjustedTo = toIndex;
+    if (adjustedTo > fromIndex) adjustedTo--;
+    if (adjustedTo === fromIndex) return;
+
+    // Remove from trackerData and re-insert at new position
+    const realFrom = trackerData.indexOf(item);
+    trackerData.splice(realFrom, 1);
+
+    // Re-derive folder items after removal and find anchor
+    const newFolderItems = trackerData.filter(d => d.type === 'item' && d.folderId === item.folderId);
+    if (adjustedTo >= newFolderItems.length) {
+      // Insert after last item in folder, before the drop zone
+      const lastItem = newFolderItems[newFolderItems.length - 1];
+      const insertAt = lastItem ? trackerData.indexOf(lastItem) + 1 : trackerData.length;
+      trackerData.splice(insertAt, 0, item);
+    } else {
+      const anchor   = newFolderItems[adjustedTo];
+      trackerData.splice(trackerData.indexOf(anchor), 0, item);
+    }
+    saveTrackerData();
+    renderTrackedItems();
   } else if (overGapIndex !== null && !item.folderId) {
     // Drop loose item at a gap position — reorder among top-level entries
     const topLevel = trackerData.filter(d => d.type === 'folder' || (d.type === 'item' && !d.folderId));
@@ -2990,6 +3398,206 @@ function onCurrencyDragEnd() {
 }
 
 // ══════════════════════════════════════════════════
+//  TIME CONVERTER
+// ══════════════════════════════════════════════════
+// Auto-detect home timezone on first run, store it
+let homeTz   = localStorage.getItem('home_tz') || Intl.DateTimeFormat().resolvedOptions().timeZone;
+let use12h   = localStorage.getItem('time_12h') === 'true';
+if (!localStorage.getItem('home_tz')) localStorage.setItem('home_tz', homeTz);
+
+function toggleAmPm() {
+  use12h = !use12h;
+  localStorage.setItem('time_12h', use12h);
+  const btn = document.getElementById('ampmToggle');
+  if (btn) { btn.textContent = use12h ? 'AM/PM' : '24h'; btn.classList.toggle('active', use12h); }
+  tickClock();
+}
+
+function initAmPmToggle() {
+  const btn = document.getElementById('ampmToggle');
+  if (btn) { btn.textContent = use12h ? 'AM/PM' : '24h'; btn.classList.toggle('active', use12h); }
+}
+
+let clockTimer = null;
+
+function cityFromTz(tz) {
+  // "America/New_York" → "New York", "Asia/Taipei" → "Taipei"
+  const parts = tz.split('/');
+  return parts[parts.length - 1].replace(/_/g, ' ');
+}
+
+function formatClockTime(tz) {
+  const opts = {
+    hour:     '2-digit',
+    minute:   '2-digit',
+    hour12:   use12h,
+    timeZone: tz
+  };
+  const str = new Intl.DateTimeFormat('en-US', opts).format(new Date());
+  // Remove leading zero for 12h (e.g. "02:30 PM" → "2:30 PM")
+  return use12h ? str.replace(/^0/, '') : str;
+}
+
+function tickClock() {
+  const localTz  = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const localEl  = document.getElementById('localTimeDisplay');
+  const homeEl   = document.getElementById('homeTimeDisplay');
+  const localLbl = document.getElementById('localTzLabel');
+  const homeLbl  = document.getElementById('homeTzCityLabel');
+  if (!localEl || !homeEl) return;
+
+  localEl.textContent = formatClockTime(localTz);
+  homeEl.textContent  = formatClockTime(homeTz);
+  localLbl.textContent = cityFromTz(localTz);
+  homeLbl.textContent  = cityFromTz(homeTz);
+
+  // Accent the local time block when abroad
+  const isAway = localTz !== homeTz;
+  document.getElementById('localTimeDisplay')?.closest('.unit-time-block')?.classList.toggle('away', isAway);
+}
+
+function startClock() {
+  initAmPmToggle();
+  tickClock();
+  if (clockTimer) clearInterval(clockTimer);
+  clockTimer = setInterval(tickClock, 1000);
+}
+
+function stopClock() {
+  if (clockTimer) { clearInterval(clockTimer); clockTimer = null; }
+}
+
+function setHomeTz() {
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  homeTz = tz;
+  localStorage.setItem('home_tz', tz);
+  tickClock();
+  showToast(`Home set to ${cityFromTz(tz)}`, false);
+}
+
+// ══════════════════════════════════════════════════
+//  UNIT CONVERTER DRAWER
+// ══════════════════════════════════════════════════
+let unitDrawerOpen = false;
+let lastTempFetch   = 0;          // timestamp of last successful fetch
+const TEMP_CACHE_MS = 30 * 60 * 1000; // 30 minutes
+
+function toggleUnitDrawer() {
+  unitDrawerOpen = !unitDrawerOpen;
+  document.getElementById('unitDrawer').classList.toggle('open', unitDrawerOpen);
+  document.getElementById('unitToggleBtn').classList.toggle('active', unitDrawerOpen);
+  if (unitDrawerOpen) {
+    const age = Date.now() - lastTempFetch;
+    if (age > TEMP_CACHE_MS) fetchLocalTemp();
+    startClock();
+  } else {
+    stopClock();
+  }
+}
+
+// Temperature
+let tempFromLocation = false; // true when values were set by fetchLocalTemp
+
+function convertTemp(from) {
+  // User typed manually — clear the location label
+  if (tempFromLocation) {
+    tempFromLocation = false;
+    const lbl = document.getElementById('unitLocationLabel');
+    if (lbl) lbl.textContent = '';
+  }
+  const c = document.getElementById('celsiusInput');
+  const f = document.getElementById('fahrenheitInput');
+  if (from === 'c') {
+    const val = parseFloat(c.value);
+    f.value = isNaN(val) ? '' : ((val * 9/5) + 32).toFixed(1);
+  } else {
+    const val = parseFloat(f.value);
+    c.value = isNaN(val) ? '' : ((val - 32) * 5/9).toFixed(1);
+  }
+}
+
+// Distance
+function convertDist(from) {
+  const km = document.getElementById('kmInput');
+  const mi = document.getElementById('miInput');
+  if (from === 'km') {
+    const val = parseFloat(km.value);
+    mi.value = isNaN(val) ? '' : (val * 0.621371).toFixed(2);
+  } else {
+    const val = parseFloat(mi.value);
+    km.value = isNaN(val) ? '' : (val / 0.621371).toFixed(2);
+  }
+}
+
+// Weight
+function convertWeight(from) {
+  const kg = document.getElementById('kgInput');
+  const lb = document.getElementById('lbInput');
+  if (from === 'kg') {
+    const val = parseFloat(kg.value);
+    lb.value = isNaN(val) ? '' : (val * 2.20462).toFixed(2);
+  } else {
+    const val = parseFloat(lb.value);
+    kg.value = isNaN(val) ? '' : (val / 2.20462).toFixed(2);
+  }
+}
+
+// Local temperature via geolocation + Open-Meteo (no API key needed)
+async function fetchLocalTemp() {
+  const btn    = document.getElementById('locateBtn');
+  const status = document.getElementById('unitWeatherStatus');
+  if (!navigator.geolocation) {
+    status.textContent = 'Geolocation not supported';
+    return;
+  }
+  btn.classList.add('spinning');
+  status.textContent = 'Locating…';
+
+  navigator.geolocation.getCurrentPosition(async pos => {
+    const { latitude: lat, longitude: lon } = pos.coords;
+    try {
+      // Fetch weather and reverse geocode in parallel
+      const [weatherRes, geoRes] = await Promise.all([
+        fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat.toFixed(4)}&longitude=${lon.toFixed(4)}&current_weather=true`),
+        fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat.toFixed(4)}&lon=${lon.toFixed(4)}&format=json`, {
+          headers: { 'Accept-Language': 'en' }
+        })
+      ]);
+
+      const weatherData = await weatherRes.json();
+      const geoData     = await geoRes.json();
+
+      const tempC = weatherData.current_weather.temperature;
+      const tempF = ((tempC * 9/5) + 32).toFixed(1);
+
+      document.getElementById('celsiusInput').value = tempC.toFixed(1);
+      document.getElementById('fahrenheitInput').value = tempF;
+      tempFromLocation = true;
+      lastTempFetch = Date.now();
+
+      // Build a concise place name: "City, Country" or fall back gracefully
+      const addr    = geoData.address || {};
+      const city    = addr.city || addr.town || addr.village || addr.county || '';
+      const country = addr.country || '';
+      const place   = [city, country].filter(Boolean).join(', ') || 'Current location';
+
+      const lbl = document.getElementById('unitLocationLabel');
+      if (lbl) lbl.textContent = `📍 ${place}`; // inline span, dot added via CSS
+      status.textContent = '';
+    } catch {
+      const lbl2 = document.getElementById('unitLocationLabel');
+      if (lbl2) lbl2.textContent = '';
+      status.textContent = 'Could not fetch weather';
+      tempFromLocation = false;
+    }
+    btn.classList.remove('spinning');
+  }, () => {
+    status.textContent = 'Location access denied';
+    btn.classList.remove('spinning');
+  }, { timeout: 10000 });
+}
+
+// ══════════════════════════════════════════════════
 //  ABOUT
 // ══════════════════════════════════════════════════
 function openAbout() { document.getElementById('aboutOverlay').classList.add('open'); }
@@ -3012,7 +3620,8 @@ function toggleDark() {
 // ══════════════════════════════════════════════════
 let toastTimer = null;
 // ── Undo-delete system ───────────────────────────────────
-const UNDO_DURATION = 4500;
+const UNDO_DURATION  = 4500;
+const CLEAR_DURATION = 15000;
 let pendingDelete = null; // { snapshot, label, timer }
 
 function commitDelete() {
@@ -3030,6 +3639,56 @@ function undoDelete() {
   renderTrackedItems();
   pendingDelete = null;
   showToast('Restored ✓', false);
+}
+
+function openClearConfirm() {
+  // Don't show if nothing to clear
+  const hasItems = trackerData.some(d => d.type === 'item');
+  if (!hasItems) { showToast('Nothing to clear', false); return; }
+  document.getElementById('clearConfirmOverlay').classList.add('open');
+}
+
+function closeClearConfirm(e) {
+  if (!e || e.target === document.getElementById('clearConfirmOverlay')) {
+    document.getElementById('clearConfirmOverlay').classList.remove('open');
+  }
+}
+
+function clearTrip() {
+  document.getElementById('clearConfirmOverlay').classList.remove('open');
+
+  // Commit any pending single-item delete first
+  if (pendingDelete) { clearTimeout(pendingDelete.timer); pendingDelete = null; }
+
+  const snapshot = JSON.parse(JSON.stringify(trackerData));
+  const itemCount = trackerData.filter(d => d.type === 'item').length;
+  const folderCount = trackerData.filter(d => d.type === 'folder').length;
+
+  trackerData = [];
+  saveTrackerData();
+  renderTrackedItems();
+
+  // Stage with 15s undo window
+  const label = `Trip cleared · ${itemCount} item${itemCount !== 1 ? 's' : ''}${folderCount ? `, ${folderCount} folder${folderCount !== 1 ? 's' : ''}` : ''}`;
+  const timer = setTimeout(commitDelete, CLEAR_DURATION);
+  pendingDelete = { snapshot, label, timer };
+
+  // Show toast with longer progress bar
+  const t       = document.getElementById('toast');
+  const msgEl   = document.getElementById('toastMsg');
+  const undoBtn = document.getElementById('toastUndo');
+  const prog    = document.getElementById('toastProgress');
+  msgEl.textContent = label;
+  undoBtn.style.display = '';
+  prog.style.transition = 'none';
+  prog.style.transform  = 'scaleX(1)';
+  t.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    prog.style.transition = `transform ${CLEAR_DURATION}ms linear`;
+    prog.style.transform  = 'scaleX(0)';
+  }));
+  toastTimer = setTimeout(() => t.classList.remove('show'), CLEAR_DURATION + 300);
 }
 
 function stageDelete(label, deleteFn) {
@@ -3108,7 +3767,7 @@ function refreshRates() {
 })();
 
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeModal(); closeFolderModal(); closeAbout(); }
+  if (e.key === 'Escape') { closeModal(); closeFolderModal(); closeAbout(); closeClearConfirm(); }
 });
 
 if ('serviceWorker' in navigator) {
