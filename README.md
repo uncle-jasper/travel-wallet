@@ -89,6 +89,15 @@ Built with vanilla HTML, CSS, and JavaScript — no frameworks, no dependencies,
 
 ## Changelog
 
+### v1.3.1
+- Time blocks always same size — boxes stretch to match each other regardless of content
+- Separator dot always vertically centred between time blocks
+- Local time never shows a day label — only home shows Tomorrow / Yesterday when needed
+- "Use current" button in home timezone picker — one tap to detect and save device timezone
+- Searchable timezone picker in about modal replaces dropdown
+- Unit converter drawer open/close is snappier (0.2s)
+- Unit converter fields even on iOS — fixed flex layout
+
 ### v1.3.0
 - ⚙ Unit converter drawer — Time, Temp, Distance, Weight in a collapsible panel
 - Live dual clocks (Local / Home) with AM/PM toggle and DST-aware via Intl API
