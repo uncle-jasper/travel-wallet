@@ -1,4 +1,4 @@
-const CACHE = 'travel-wallet-v1.2.1';
+const CACHE = 'travel-wallet-v1.2.2';
 const ASSETS = [
   './',
   './index.html',

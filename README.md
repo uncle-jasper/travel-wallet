@@ -79,6 +79,9 @@ Built with vanilla HTML, CSS, and JavaScript — no frameworks, no dependencies,
 
 ## Changelog
 
+### v1.2.2
+- Disabled text selection during drag gestures on iOS — no more copy/paste popover while reordering
+
 ### v1.2.1
 - Full-width drag ghosts at 72% opacity — see what's underneath while dragging
 - Correct decimal formatting per currency — JPY, KRW, TWD, THB, MXN, INR and others display as whole numbers
